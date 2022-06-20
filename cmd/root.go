@@ -17,12 +17,15 @@ package cmd
 
 import (
   "fmt"
+  "bufio"
+  "strings"
+  "strconv"
   "os"
   "github.com/spf13/cobra"
 
   homedir "github.com/mitchellh/go-homedir"
   "github.com/spf13/viper"
-
+  "github.com/amanoese/kmeango/pkg"
 )
 
 
@@ -41,7 +44,35 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
   // Uncomment the following line if your bare application
   // has an action associated with it:
-  //	Run: func(cmd *cobra.Command, args []string) { },
+  Run: func(cmd *cobra.Command, args []string) {
+    var lines = *read_input()
+    clumnsNum := len(strings.Split(lines[0]," "))
+    datas := make([]pkg.Point,len(lines))
+
+    for i, line := range lines {
+      int_values := make([]int,clumnsNum)
+      line_words := strings.Split(line," ")
+      for w_i, word := range line_words {
+        int_values[w_i],_ = strconv.Atoi(word)
+      }
+      p := pkg.Point{ Values: int_values }
+      datas[i] = p
+    }
+    fmt.Println("Hello!")
+    results := pkg.Calc(datas,3)
+    for _, point := range results {
+      category := ""
+      values := ""
+      for _,str := range point.CategoryValue {
+        category = category + " " + strconv.Itoa(str)
+      }
+      for _,str := range point.Values {
+        values = values + " " + strconv.Itoa(str)
+      }
+      fmt.Println(category,":",values)
+    }
+
+  },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -95,3 +126,12 @@ func initConfig() {
   }
 }
 
+func read_input() *[]string{
+    sc:=bufio.NewScanner(os.Stdin)
+    var lines []string
+    for sc.Scan() {
+        lines = append(lines,sc.Text())
+    }
+    return &lines
+
+}
