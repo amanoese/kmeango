@@ -31,7 +31,6 @@ import (
 
 var cfgFile string
 
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
   Use:   "kmeango",
@@ -58,8 +57,12 @@ to quickly create a Cobra application.`,
       p := pkg.Point{ Values: int_values }
       datas[i] = p
     }
-    fmt.Println("Hello!")
-    results := pkg.Calc(datas,3)
+		k, err := cmd.Flags().GetInt("kcotegory")
+		if err != nil {
+			fmt.Println(err)
+		}
+    results := pkg.Calc(datas,k)
+    fmt.Println("Category : Value")
     for _, point := range results {
       category := ""
       values := ""
@@ -69,7 +72,7 @@ to quickly create a Cobra application.`,
       for _,str := range point.Values {
         values = values + " " + strconv.Itoa(str)
       }
-      fmt.Println(category,":",values)
+      fmt.Println(fmt.Sprintf("%8s", category),":",values)
     }
 
   },
@@ -96,7 +99,7 @@ func init() {
 
   // Cobra also supports local flags, which will only run
   // when this action is called directly.
-  rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+  rootCmd.Flags().IntP("kcotegory", "k", 3, "kmean cluster category number")
 }
 
 
