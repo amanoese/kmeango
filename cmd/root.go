@@ -62,7 +62,7 @@ to quickly create a Cobra application.`,
 			fmt.Println(err)
 		}
     results := pkg.Calc(datas,k)
-    fmt.Println("Category : Value")
+    fmt.Println("Center : Value")
     for _, point := range results {
       category := ""
       values := ""
@@ -72,7 +72,7 @@ to quickly create a Cobra application.`,
       for _,str := range point.Values {
         values = values + " " + strconv.Itoa(str)
       }
-      fmt.Println(fmt.Sprintf("%8s", category),":",values)
+      fmt.Println(fmt.Sprintf("%6s", category),":",values)
     }
 
   },
